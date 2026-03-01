@@ -1,9 +1,16 @@
 # llm/openai_client.py
 # This module contains the OpenAI client setup and a function to stream chat completions from the OpenAI API.
+import os
 from openai import OpenAI
-from config import OPENAI_API_KEY, CHAT_MODEL
+from config import CHAT_MODEL
+import streamlit as st
 # Initialize the OpenAI client with the API key from the configuration
-client = OpenAI(api_key=OPENAI_API_KEY)
+if "OPENAI_API_KEY" in st.secrets:
+    api_key = st.secrets["OPENAI_API_KEY"]
+else:
+    api_key = os.getenv("OPENAI_API_KEY")
+
+client = OpenAI(api_key=api_key)
 
 # Function to stream chat completions from the OpenAI API based on a user query and retrieved context
 def stream_chat_completion(query, context):
